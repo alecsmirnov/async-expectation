@@ -17,8 +17,10 @@ enum AsyncExpectationDurationKind {
 actor AsyncExpectation {
     private var waitTask: Task<Void, Error>?
 
-    func fulfill() {
-        waitTask?.cancel()
+    nonisolated func fulfill() {
+        Task {
+            await waitTask?.cancel()
+        }
     }
 
     func wait(durationKind: AsyncExpectationDurationKind) async throws {
